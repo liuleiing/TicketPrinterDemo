@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ticketPrinter" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <!--导入bootstrapcss库-->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <!--导入angular核心库-->
+    <script src="//cdn.bootcss.com/angular.js/1.5.8/angular.min.js"></script>
+    <!--导入全局的js-->
+    <script src="js/scripts/main/main.js"></script>
+    <!--导入服务-->
+    <script src="js/scripts/server/server.js"></script>
+    <!--导入控制器-->
+    <script src="js/scripts/controller/matchDataControl.js"></script>
+    <script src="js/scripts/controller/choiceFavorableControl.js"></script>
+    <script>
+    </script>
+    <style>
+        .selctWidth{width: 100px;}
+    </style>
+</head>
+<body>
+<section class="container maxWidth">
+    <div ng-controller="choiceFavorableControl">
+        <label for="favorable1">买二送一优惠商品类别</label>
+        <select id="favorable1" ng-model="favorable1" class="selctWidth">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        <label for="favorable2">95折优惠商品类别</label>
+        <select id="favorable2" ng-model="favorable2" class="selctWidth">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        <button ng-click="getTicket()">print</button>
+    </div>
+    <div ng-controller="matchDataControl">
+        <table class="table table-striped">
+            <caption>没钱赚商店--购物清单</caption>
+            <thead>
+            <tr>
+                <th>名称</th>
+                <th>数量</th>
+                <th>单价（元）</th>
+                <th>小计（元）</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in newGoodsInfo">
+                <td>{{item.goodsTitle}}</td>
+                <td>{{item.goodsNumber}}</td>
+                <td>{{item.goodsPrice|number:2}}</td>
+                <td ng-show="GoodsList1.length">
+                        <p ng-repeat="subitem in GoodsList1" ng-show="item.goodsTitle==subitem.goodsTitle">
+                            {{subitem.goodsPrice*subitem.goodsNumber|number:2}}
+                        </p>
+                </td>
+                <td ng-show="!GoodsList1.length">{{item.goodsPrice * item.goodsNumber|number:2}}</td>
+                <td ng-show="GoodsList2.length">
+                    <p ng-repeat="subitem in GoodsList2" ng-show="item.goodsTitle==subitem.goodsTitle">节省：{{item.goodsPrice * item.goodsNumber*0.05|number:2}}</p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div ng-show="GoodsList1.length">
+            <p>买二送一商品</p>
+            <p ng-repeat="item in GoodsList1" ng-show="item.goodsType==favorable">名称：{{item.goodsTitle}}，数量：{{item.goodsNumber|myFloor}}</p>
+        </div>
+        <p>总计 {{total-save|number:2}}(元)</p>
+        <p ng-show="GoodsList1.length || GoodsList2.length">节省 {{save |number:2}}(元)</p>
+    </div>
+</section>
+
+</body>
+</html>
